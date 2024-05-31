@@ -7,6 +7,9 @@ import com.example.taskmanagement.model.User;
 public interface UserService {
     User saveUser(User user);
 
+
+    User findByUsername(String username);
+
+
     UserDetails loadUserByUsername(String username);
-   
 }
