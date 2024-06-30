@@ -9,7 +9,6 @@ import com.example.taskmanagement.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -26,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collection;
 import java.util.Optional;
+
 
 @RestController
 @RequestMapping("/auth")
@@ -44,15 +44,16 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<AuthResponse>createUserHandler(@RequestBody User user)throws Exception {
 
-//        Optional<User> isUserName=userRepository.findByUsername(user.getUsername());
-//        if(isUserName==null){
-//            throw  new Exception("user is reg alredy");
-//        }
+    //    Optional<User> isUserName=userRepository.findByUsername(user.getUsername());
+    //    if(isUserName==null){
+    //        throw  new Exception("user is reg alredy");
+    //    }
 
         User createUser=new User();
         createUser.setUsername(user.getUsername());
         createUser.setPassword(passwordEncoder.encode(user.getPassword()));
-         User savedUser=userRepository.save(createUser);
+        createUser.setRole(user.getRole());
+        User savedUser=userRepository.save(createUser);
 
          Authentication authentication=new UsernamePasswordAuthenticationToken(user.getUsername(),user.getPassword());
         SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -61,14 +62,16 @@ public class AuthController {
         authResponse.setToken(jwt);
         authResponse.setMessage("reg success");
         authResponse.setUsername(user.getUsername());
+        authResponse.setRole(user.getRole());
         return new ResponseEntity<>(authResponse,HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
-    public  ResponseEntity<AuthResponse>loginin(@RequestBody LoginRequest request){
+    public  ResponseEntity<AuthResponse>login(@RequestBody LoginRequest request){
 
        String  username= request.getUsername();
        String password= request.getPassword();
+
        Authentication authentication=authenticate(username,password);
         Collection<?extends GrantedAuthority>authorities=authentication.getAuthorities();
         String role=authorities.isEmpty()?null:authorities.iterator().next().getAuthority();

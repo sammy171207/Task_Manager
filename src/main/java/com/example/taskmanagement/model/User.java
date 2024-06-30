@@ -19,9 +19,7 @@ public class User {
     private Long id;
     private String username;
     private String password;
-    private String role;
+    private String role="User";
 
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singletonList(new SimpleGrantedAuthority(role));
-    }
+   
 }

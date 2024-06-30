@@ -2,8 +2,6 @@ package com.example.taskmanagement.config;
 
 import java.util.Arrays;
 import java.util.Collections;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,7 +22,7 @@ import jakarta.servlet.Filter;
 @Configuration
 @EnableWebSecurity
 public class AppConfig {
-    
+
  private final JwtTokenValidator jwtTokenValidator;
 
     public AppConfig(JwtTokenValidator jwtTokenValidator) {
@@ -36,7 +34,8 @@ public class AppConfig {
         http
             .sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(authorize -> authorize
-                .requestMatchers("/api/admin/**").hasAnyRole("RESTAURANT_OWNER", "ADMIN")
+                .requestMatchers("/api/admin/**").hasAnyRole("APP_OWNER", "ADMIN")
+                    .requestMatchers("api/user").hasAnyRole("User")
                 .requestMatchers("/api/**").authenticated()
                 .anyRequest().permitAll())
             .addFilterBefore((Filter) jwtTokenValidator, UsernamePasswordAuthenticationFilter.class)
@@ -69,5 +68,5 @@ public class AppConfig {
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
-     
+
 }
