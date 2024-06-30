@@ -1,5 +1,6 @@
 package com.example.taskmanagement;
 
+import com.example.taskmanagement.config.JwtProvider;
 import com.example.taskmanagement.model.User;
 import com.example.taskmanagement.repository.UserRepository;
 import com.example.taskmanagement.service.UserServiceImp;
@@ -17,8 +18,12 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 public class UserServiceImpTest {
+
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private JwtProvider jwtProvider;
 
     @InjectMocks
     private UserServiceImp userService;
@@ -29,7 +34,7 @@ public class UserServiceImpTest {
     }
 
     @Test
-    void testSaveUser() {
+    void testSaveUser() throws Exception {
         User user = new User();
         user.setUsername("testuser");
         user.setPassword("password");
@@ -67,33 +72,41 @@ public class UserServiceImpTest {
     }
 
     @Test
-    void testLoadUserByUsername() {
+    void testFindByUserByJwtToken() throws Exception {
+        String jwt = "sample.jwt.token";
+        String username = "testuser";
+
         User user = new User();
         user.setUsername("testuser");
         user.setPassword("password");
         user.setRole("ROLE_USER");
 
-        // Mock userRepository.findByUsername to return Optional.of(user)
-        when(userRepository.findByUsername("testuser")).thenReturn(Optional.of(user));
+        when(jwtProvider.getUsernameFromJwtToken(jwt)).thenReturn(username);
+        when(userRepository.findByUsername(username)).thenReturn(Optional.of(user));
 
-        // Call loadUserByUsername with "testuser"
-        UserDetails userDetails = userService.loadUserByUsername("testuser");
+        User result = userService.findByUserByJwtToken(jwt);
 
-        // Assertions
-        assertNotNull(userDetails);
-        assertEquals("testuser", userDetails.getUsername());
-        assertEquals("password", userDetails.getPassword());
-        assertEquals(1, userDetails.getAuthorities().size());
-        assertEquals("ROLE_USER", userDetails.getAuthorities().iterator().next().getAuthority());
-
+        assertNotNull(result);
+        assertEquals("testuser", result.getUsername());
+        verify(jwtProvider, times(1)).getUsernameFromJwtToken(jwt);
+        verify(userRepository, times(1)).findByUsername(username);
     }
 
     @Test
-    void testLoadUserByUsername_NotFound() {
-        when(userRepository.findByUsername("testuser")).thenReturn(Optional.empty());
+    void testFindByUserByJwtToken_UserNotFound() {
+        String jwt = "sample.jwt.token";
+        String username = "testuser";
 
-        assertThrows(UsernameNotFoundException.class, () -> {
-            userService.loadUserByUsername("testuser");
+        when(jwtProvider.getUsernameFromJwtToken(jwt)).thenReturn(username);
+        when(userRepository.findByUsername(username)).thenReturn(Optional.empty());
+
+        Exception exception = assertThrows(Exception.class, () -> {
+            userService.findByUserByJwtToken(jwt);
         });
+
+        assertEquals("User not found", exception.getMessage());
+        verify(jwtProvider, times(1)).getUsernameFromJwtToken(jwt);
+        verify(userRepository, times(1)).findByUsername(username);
     }
+
 }

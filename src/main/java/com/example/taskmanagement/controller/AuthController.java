@@ -67,7 +67,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public  ResponseEntity<AuthResponse>login(@RequestBody LoginRequest request){
+    public  ResponseEntity<AuthResponse>login(@RequestBody LoginRequest request) throws Exception {
 
        String  username= request.getUsername();
        String password= request.getPassword();
@@ -83,8 +83,8 @@ public class AuthController {
         return new ResponseEntity<>(authResponse,HttpStatus.OK);
     }
 
-    private Authentication authenticate(String username, String password) {
-        UserDetails userDetails=userService.loadUserByUsername(username);
+    private Authentication authenticate(String username, String password) throws Exception {
+        UserDetails userDetails= (UserDetails) userService.findByUsername(username);
         if(username==null) throw  new BadCredentialsException("invalid");
         if(!passwordEncoder.matches(password,userDetails.getPassword())){
             throw new BadCredentialsException("password not match");

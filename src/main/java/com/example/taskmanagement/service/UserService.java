@@ -1,15 +1,14 @@
 package com.example.taskmanagement.service;
 
-import org.springframework.security.core.userdetails.UserDetails;
+
 
 import com.example.taskmanagement.model.User;
 
 public interface UserService {
-    User saveUser(User user);
+    public User saveUser(User user) throws Exception;
 
 
-    User findByUsername(String username);
+   public User findByUsername(String username) throws Exception;
 
-
-    UserDetails loadUserByUsername(String username);
+    public User findByUserByJwtToken(String jwt) throws Exception;
 }
