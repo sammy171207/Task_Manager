@@ -1,0 +1,43 @@
+/* addtask.css */
+
+.add-task {
+    margin-top: 20px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+  }
+  
+  .add-task form {
+    display: grid;
+    gap: 10px;
+  }
+  
+  .add-task label {
+    font-weight: bold;
+  }
+  
+  .add-task input[type="text"],
+  .add-task textarea {
+    width: 100%;
+    padding: 8px;
+    font-size: 16px;
+  }
+  
+  .add-task input[type="checkbox"] {
+    width: auto;
+    margin-top: 5px;
+  }
+  
+  .add-task button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .add-task button:hover {
+    background-color: #0056b3;
+  }
+  

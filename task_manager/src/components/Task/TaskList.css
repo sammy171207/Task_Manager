@@ -1,0 +1,56 @@
+/* tasklist.css */
+
+.task-list {
+    margin-top: 20px;
+  }
+  
+  .task-item {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .task-item h3 {
+    margin-bottom: 5px;
+  }
+  
+  .task-item p {
+    margin-bottom: 10px;
+  }
+  
+  .task-item.completed {
+    background-color: #f0f0f0;
+  }
+  
+  .task-item.completed h3 {
+    text-decoration: line-through;
+    color: #888;
+  }
+  
+  .task-item.completed p {
+    color: #888;
+  }
+  
+  .task-item-actions {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .task-item-actions button {
+    padding: 5px 10px;
+    cursor: pointer;
+  }
+  
+  .task-item-actions button.delete {
+    background-color: #f44336;
+    color: white;
+    border: none;
+  }
+  
+  .task-item-actions button.edit {
+    background-color: #4caf50;
+    color: white;
+    border: none;
+  }
+  
