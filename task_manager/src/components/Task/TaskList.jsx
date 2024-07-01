@@ -11,7 +11,7 @@ const TaskList = () => {
       try {
         const response = await axiosInstance.get('/api/task', {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`, // Adjust as per your token storage method
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
           },
         });
         setTasks(response.data);
@@ -28,7 +28,7 @@ const TaskList = () => {
 
   const handleToggleCompletion = async (id, completed) => {
     try {
-      const response = await axiosInstance.patch(`/api/tasks/${id}`, {
+      const response = await axiosInstance.put(`/api/task/${id}`, {
         completed: !completed, // Toggle the completion status
       }, {
         headers: {
@@ -70,15 +70,15 @@ const TaskList = () => {
           <li key={task.id} className="bg-white p-6 rounded-lg shadow-md">
             <h3 className="text-xl font-semibold mb-2">{task.title}</h3>
             <p className="text-gray-700 mb-2">{task.description}</p>
-            <p className={`font-medium ${task.completed ? 'text-green-600' : 'text-red-600'}`}>
-              Completed: {task.completed ? 'Yes' : 'No'}
-            </p>
-            <button
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-2"
-              onClick={() => handleToggleCompletion(task.id, task.completed)}
-            >
-              Toggle Completion
-            </button>
+            <label className="inline-flex items-center mt-2">
+              <input
+                type="checkbox"
+                checked={task.completed}
+                onChange={() => handleToggleCompletion(task.id, task.completed)}
+                className="form-checkbox h-5 w-5 text-blue-500"
+              />
+              <span className="ml-2 text-gray-700">Completed</span>
+            </label>
           </li>
         ))}
       </ul>
